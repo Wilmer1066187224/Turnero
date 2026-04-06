@@ -30,7 +30,7 @@ import { io } from "socket.io-client"
 import { useRoute } from 'vue-router'
 
 // 🔌 socket: cambia localhost por la IP de tu servidor
-const socket = io("http://192.168.101.75:3001")
+const socket = io("http://192.168.101.20:3001")
 
 // 📌 estado
 const turno = ref(null)
@@ -43,7 +43,7 @@ const modulo = route.params.id
 const llamar = async () => {
   try {
     // axios apuntando a la IP del servidor
-    const res = await axios.post(`http://192.168.101.75/api/llamar/${modulo}`)
+    const res = await axios.post(`http://192.168.101.20:8000/api/llamar/${modulo}`)
     turno.value = res.data
     console.log("Turno llamado:", res.data)
 

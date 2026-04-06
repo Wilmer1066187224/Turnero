@@ -51,7 +51,7 @@ const turno = ref({})
 const historial = ref([])
 
 // 🔌 Socket correcto
-const socket = io("http://192.168.101.75:3001")
+const socket = io("http://192.168.101.20:3001")
 
 // 🔔 sonido protegido (TV safe)
 let ding = null
@@ -81,10 +81,12 @@ const formatearNumero = (numero) => {
     return parseInt(numero.toString().replace(/\D/g, ''))
 }
 
+
+
 // 📊 cargar historial (⚠️ SIN :8000)
 const cargarHistorial = async () => {
     try {
-        const res = await axios.get("http://192.168.101.75/api/turnos")
+        const res = await axios.get("http://192.168.101.20:8000/api/turnos")
         historial.value = res.data
     } catch (error) {
         console.log("Error cargando historial")
