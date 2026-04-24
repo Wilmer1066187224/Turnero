@@ -16,7 +16,8 @@ export default defineConfig({
         strictPort: true,
         cors: true,
         hmr: {
-            host: '192.168.101.70' // 🔥 ESTO ELIMINA [::1]
+            host: '192.168.101.70' // 🔥 ESTO ELIMINA [::1] si cambia la ip debo cambiar aqui tambien 
+            
         }
     }
 })

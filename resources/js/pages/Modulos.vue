@@ -1,25 +1,39 @@
 <template>
   <div class="modulo-container">
+
     <!-- HEADER -->
     <div class="header">
-      <h1>🧑‍💼 Módulo {{ modulo }}</h1>
+      <h1>Módulo {{ modulo }}</h1>
       <p>Atención al Usuario</p>
     </div>
 
-    <!-- BOTÓN LLAMAR -->
+    <!-- CONTENIDO -->
     <div class="contenido">
+
+      <!-- BOTÓN -->
       <button @click="llamar" class="btn-llamar">
-        🔔 Llamar Turno
+        Llamar Turno
       </button>
 
-      <!-- TURNO ACTUAL -->
-      <transition name="fade">
-        <div v-if="turno" class="turno-actual" :key="turno.numero">
-          <p>Turno actual</p>
-          <h1>{{ turno.numero }}</h1>
+      <!-- TURNO -->
+      <transition name="zoom">
+        <div v-if="turno" class="turno-box" :key="turno.numero">
+
+          <p class="label">Turno en atención</p>
+
+          <div class="numero">
+            {{ turno.numero }}
+          </div>
+
+          <div class="modulo-text">
+            Módulo {{ modulo }}
+          </div>
+
         </div>
       </transition>
+
     </div>
+
   </div>
 </template>
 
@@ -29,25 +43,17 @@ import { ref } from "vue"
 import { io } from "socket.io-client"
 import { useRoute } from 'vue-router'
 
-// 🔌 socket: cambia localhost por la IP de tu servidor
 const socket = io("http://192.168.101.70:3001")
 
-// 📌 estado
 const turno = ref(null)
 
-// 📍 obtener módulo desde la URL
 const route = useRoute()
 const modulo = route.params.id
 
-// 🔥 función para llamar turno
 const llamar = async () => {
   try {
-    // axios apuntando a la IP del servidor
     const res = await axios.post(`http://192.168.101.70:8000/api/llamar/${modulo}`)
     turno.value = res.data
-    console.log("Turno llamado:", res.data)
-
-    // 🔴 enviar a la pantalla mediante Socket.IO
     socket.emit("nuevo_turno", res.data)
   } catch (error) {
     console.error("ERROR:", error)
@@ -56,83 +62,111 @@ const llamar = async () => {
 </script>
 
 <style scoped>
+
+/* 🌐 CONTENEDOR GENERAL */
 .modulo-container {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #ffffff; /* Fondo blanco */
-  color: #333333;
+  background: #f4f6f9;
   font-family: 'Segoe UI', sans-serif;
-  padding: 40px 20px;
 }
 
-/* HEADER */
+/* 🔝 HEADER */
 .header {
   text-align: center;
-  margin-bottom: 40px;
+  padding: 25px 10px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .header h1 {
-  font-size: 36px;
-  color: #006400; /* verde suave */
+  font-size: 34px;
   margin: 0;
+  color: #1f2937;
+  font-weight: 600;
 }
 
 .header p {
-  font-size: 18px;
-  color: #555555;
+  color: #6b7280;
   margin-top: 5px;
 }
 
-/* BOTÓN LLAMAR */
+/* 📦 CONTENIDO */
+.contenido {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 🔘 BOTÓN */
 .btn-llamar {
-  background-color: #FCD116; /* amarillo banco colombiano */
-  color: #002D62; /* azul rey para contraste */
-  font-size: 22px;
-  padding: 18px 50px;
+  background: #2563eb;
+  color: white;
+  font-size: 20px;
+  padding: 16px 50px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgba(37,99,235,0.2);
+  transition: all 0.3s ease;
 }
 
 .btn-llamar:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  background: #1d4ed8;
+  transform: translateY(-2px);
 }
 
-/* TURNO ACTUAL */
-.turno-actual {
+/* 🧾 TARJETA TURNO */
+.turno-box {
   margin-top: 50px;
-  background: #f9f9f9; /* caja clara */
-  padding: 30px 50px;
+  background: white;
+  padding: 40px 70px;
   border-radius: 20px;
   text-align: center;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  border: 1px solid #e5e7eb;
 }
 
-.turno-actual p {
-  font-size: 20px;
-  color: #006400; /* verde suave */
+/* TEXTO */
+.label {
+  font-size: 18px;
+  color: #6b7280;
   margin-bottom: 10px;
-  font-weight: 500;
 }
 
-.turno-actual h1 {
-  font-size: 90px;
-  margin: 0;
-  color: #FCD116; /* amarillo destacado */
-  text-shadow: 0 0 10px rgba(252,209,22,0.4);
+/* 🔢 NÚMERO GRANDE */
+.numero {
+  font-size: 110px;
+  font-weight: bold;
+  color: #111827;
 }
 
-/* TRANSICIÓN */
-.fade-enter-active, .fade-leave-active {
-  transition: all 0.5s ease;
+/* 📍 MÓDULO */
+.modulo-text {
+  margin-top: 10px;
+  font-size: 22px;
+  color: #2563eb;
+  font-weight: 600;
 }
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-  transform: scale(0.85);
+
+/* ✨ ANIMACIÓN */
+.zoom-enter-active {
+  animation: zoomIn 0.35s ease;
 }
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 </style>
