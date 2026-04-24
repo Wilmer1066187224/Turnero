@@ -28,7 +28,7 @@ const turno = ref(null)
 // 🔥 función para generar turno apuntando al servidor por IP
 const generar = async (servicio) => {
   try {
-    const res = await axios.post(`http://192.168.101.20:8000/api/turno/${servicio}`)
+    const res = await axios.post(`http://192.168.101.70:8000/api/turno/${servicio}`)
     console.log("RESPUESTA COMPLETA:", res.data)
     turno.value = res.data
   } catch (error) {

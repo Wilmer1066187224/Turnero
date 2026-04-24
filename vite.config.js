@@ -10,4 +10,13 @@ export default defineConfig({
         }),
         vue(),
     ],
+    server: {
+        host: '192.168.101.70', // 🔥 TU IP
+        port: 5173,
+        strictPort: true,
+        cors: true,
+        hmr: {
+            host: '192.168.101.70' // 🔥 ESTO ELIMINA [::1]
+        }
+    }
 })
